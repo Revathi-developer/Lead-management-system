@@ -1,0 +1,191 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Trainer List - VRG Technologies</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        a:link, /* Unvisited links */
+        a:visited, /* Visited links */
+        a:hover, /* Links when hovered */
+        a:active { /* Links when clicked */
+        color: #007BFF; /* Choose a single color, e.g., blue */
+        text-decoration: none; /* Optional: Removes the underline */
+}
+        main {
+    flex: 1; /* Grow to fill the available space */
+}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #008080;
+            color: white;
+        }
+        .action-header-links {
+            display: flex;             /* Use Flexbox for alignment */
+            justify-content: flex-end; /* Align all items to the right */
+            gap: 20px;                 /* Add space between links */
+            margin-top: 20px;          /* Optional spacing above the links */
+        }
+
+        .action-header-links a {
+             text-decoration: none;
+            font-weight: bold;
+            color: #007BFF;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+        . action-links a {
+            text-decoration: none;
+            font-weight: bold;
+            color: #007BFF; /* Link color (blue) */
+            cursor: pointer;
+            font-size: 0.9em; /* Smaller size for table actions */
+
+        }
+
+
+
+    
+        footer{
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+            margin-top: auto;
+
+
+
+
+        }
+         .messages {
+            color: red; /* Change color to red for visibility */
+            margin-bottom: 15px;
+            list-style-type: none; /* Remove bullets from list */
+            padding: 0; /* Remove padding */
+        }
+        
+        .error-messages {
+        color: #e74c3c;  /* Red color for error messages */
+        margin-bottom: 15px;
+        padding: 0;
+        list-style-type: none;
+}
+        </style>
+        </head>
+        <body>
+<h1 style="text-align: center; margin-bottom: 20px;">Trainer List</h1>
+<div class="action-header-links">
+        <!-- Add space between the links and add emojis -->
+        <a href="{% url 'add_trainer' %} ">➕Add New Trainer</a>
+        <span>&nbsp;&nbsp;&nbsp;</span> <!-- Adds space between the links -->
+        <a href="{% url 'home' %}" >🏠Back to Home </a>
+    </div>
+
+    {% if form.errors %}
+    <div class="error-messages">
+        <ul>
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li>{{ field|capfirst }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+
+
+
+
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+<table border="1" style="margin-bottom: 20px;">
+        <tr>
+            <th>trainer Number</th>
+            <th>Date of joining</th>
+            <th>Trainer Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>bio</th>
+            <th>Expertise</th>
+            <th>Resume</th>
+            <th>Location</th>
+            <th>Type</th>
+            <th>Actions</th>
+         
+            
+           
+        </tr>
+        {% for trainer in trainers %}
+        <tr>
+            <td>{{ trainer.trainer_number }}</td>
+
+            <td>{{ trainer.date_of_joining|date:"Y-m-d" }}</td>
+            <td>{{ trainer.name }}</td>
+            <td>{{ trainer.email }}</td>
+            <td>{{ trainer.phone }}</td>
+            <td>{{trainer.bio}}</td>
+            <td>{{trainer.expertise}}</td>
+        <td>
+    {% if trainer.resume %}
+        <p>{{ trainer.resume.url }}</p>  <!-- Debug output -->
+        <a href="{{ trainer.resume.url }}" download>Download Resume</a>
+    {% else %}
+        No resume available
+    {% endif %}
+</td>
+
+            <td>{{ trainer.location }}</td>  
+            <td>{{trainer.type}}</td>
+             <td class="action-links">
+        <a href="{% url 'edit_trainer' trainer.id %}" >Edit</a> |
+        <a href="{% url 'delete_trainer' trainer.id %}">Delete</a>
+       
+    </td>        
+           
+        </tr>
+        {% endfor %}
+    </table>
+    <br><br>
+    
+    
+
+
+ <footer>
+    <p>© 2024 VRG Technologies. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

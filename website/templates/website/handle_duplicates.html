@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Duplicate Leads</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td {
+            background-color: #fff;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 10px 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .info-message {
+            background-color: #e7f3fe;
+            border: 1px solid #b3d9f7;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Duplicate Leads</h2>
+<p>The following leads already exist. What would you like to do?</p>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags == 'info' %}info-message{% else %}success-message{% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<table>
+    <tr>
+        <th>Lead Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Location</th>
+        <th>Course</th>
+    </tr>
+    {% for duplicate in duplicates %}
+    <tr>
+        <td>{{ duplicate.row.name }}</td>
+        <td>{{ duplicate.row.email }}</td>
+        <td>{{ duplicate.row.phone }}</td>
+        <td>{{ duplicate.row.location }}</td>
+        <td>{{ duplicate.row.course }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit" name="action" value="ignore">Ignore Duplicates</button>
+    <button type="submit" name="action" value="update">Update Existing Leads</button>
+    <button type="submit" name="action" value="keep">Keep as New Leads</button>
+</form>
+
+</body>
+</html>
+
+
+
+
+

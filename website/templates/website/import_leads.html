@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Leads</title>
+</head>
+<body>
+    <h2>Upload Leads File</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>Select a file to upload (CSV, XLS, or XLSX):</p>
+        <input type="file" name="leads_file" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>
+
+
+
+

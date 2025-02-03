@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Enrollment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid;
+            border-image: linear-gradient(90deg, #00C6A1, #00B5F1) 1;
+            overflow: hidden;
+        }
+
+        h2 {
+            text-align: center;
+            background: linear-gradient(90deg, #00C6A1, #00B5F1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin: 5px 0 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            margin-bottom: 15px;
+        }
+
+        .form-row div {
+            flex: 1;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            background: linear-gradient(90deg, #00C6A1, #00B5F1);
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background: linear-gradient(90deg, #00B5F1, #00C6A1);
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #00B5F1;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .messages {
+            color: red;
+            margin-bottom: 15px;
+            list-style-type: none;
+            padding: 0;
+        }
+        .error-messages {
+        color: #e74c3c;  /* Red color for error messages */
+        margin-bottom: 15px;
+        padding: 0;
+        list-style-type: none;
+}
+    </style>
+    <title>Enrollment Form</title>
+</head>
+
+
+<body>
+
+  <div class="container">
+        <h1>Add Enrollment</h1>
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="error-messages" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+
+        {% if form.errors %}
+        <ul class="error-messages">
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+  
+
+        <form action="{% url 'add_enrollment' %}" method="POST">
+            {% csrf_token %}
+            
+            <div class="form-row">
+                <div>
+                    <label for="id_name">Name:</label>
+                    {{ form.name }}
+                </div>
+                <div>
+                    <label for="id_email">Email:</label>
+                    {{ form.email }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label for="id_phone">Phone (+91):</label>
+                    <div style="display: flex; align-items: center;">
+                        <span style="margin-right: 10px; font-size: 16px;">+91</span>
+                         <input type="text" id="id_phone" name="phone" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        
+                    </div>
+                </div>
+                <div>
+                    <label for="id_address">Address:</label>
+                    {{ form.address}}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                   <label for="id_courses_opted">Courses Opted:</label>
+                    {{ form.courses_opted }}
+                </div>
+                <div>
+                    <label for="id_mode_of_training">Mode of training :</label>
+                    {{ form.mode_of_training }}
+                </div>
+            </div>
+
+
+            <div class="form-row">
+                <div>
+                    <label for="id_tentative_date_of_joining_course">Tentative date of joining course:</label>
+                    <input type="date" id="id_tentative_date_of_joining_course" name="tentative_date_of_joining_course" value="{{ form.tentative_date_of_joining_course.value|default:'' }}">
+                </div>
+                
+            </div>
+
+            <input type="submit" value="Submit">
+          
+        </form>
+
+        <a href="{% url 'enrollment_list' %}">Enrollment List</a>
+        <a href="{% url 'home' %}">Back to Home</a>
+    </div>
+
+</body>
+</html>
+
+
+
+
+      

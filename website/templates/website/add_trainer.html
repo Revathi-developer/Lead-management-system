@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+
+            
+        }
+
+        .container {
+            max-width: 800px; /* Expanded width */
+            width: 100%;
+            margin: 20px;
+            padding: 20px; /* Reduced padding for better fit */
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 4px solid;
+            border-image: linear-gradient(90deg, #00C6A1, #00B5F1) 1;
+            overflow: hidden; /* Prevent content overflow */
+           
+    }
+    h2 {
+        text-align: center; /* Center the heading */
+        background: linear-gradient(90deg, #00C6A1, #00B5F1); /* Gradient color */
+        -webkit-background-clip: text; /* Clips the gradient to the text */
+        -webkit-text-fill-color: transparent; /* Makes the text color transparent */
+        font-size: 20px; /* Adjusts the font size */
+        margin-bottom: 15px; /* Adds space below the heading */
+        
+
+            
+}
+        label {
+            display: block;
+            margin: 5px 0 5px;
+            font-weight: bold;
+             font-size: 14px;
+            
+        }
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            margin-bottom: 15px;
+        }
+
+        .form-row div {
+            flex: 1;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select {
+            width: 100%; /* Full width for better fit */
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box; /* Ensure padding doesn't expand width */
+            font-size:14px;
+        } 
+
+           
+           
+           
+
+        input[type="submit"] {
+            width: 100%;
+            background: linear-gradient(90deg, #00C6A1, #00B5F1);
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+       
+
+        input[type="submit"]:hover {
+            background: linear-gradient(90deg, #00B5F1, #00C6A1);
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #00B5F1;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .messages {
+            color: red; /* Change color to red for visibility */
+            margin-bottom: 15px;
+            list-style-type: none; /* Remove bullets from list */
+            padding: 0; /* Remove padding */
+        }
+        
+        .error-messages {
+        color: #e74c3c;  /* Red color for error messages */
+        margin-bottom: 15px;
+        padding: 0;
+        list-style-type: none;
+}
+    </style>
+    </head>
+    <body>
+
+  <div class="container">
+    <h2>Add New Trainer</h2>
+    
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if form.errors %}
+        <ul class="error-messages">
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+        {% endif %}
+         
+               
+    
+        <form action="{% url 'add_trainer' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class='form-row'>
+            <div>
+         <label for ="id_name">Trainer Name:</label>
+            {{form.name}}
+            </div>
+        <div>
+            <label for="id_email">Email:</label>
+            {{form.email}}
+            </div>
+        </div>
+
+        
+            <div class="form-row">
+                <div>
+                    <label for="id_phone">Phone (+91):</label>
+                    <div style="display: flex; align-items: center;">
+                        <span style="margin-right: 10px; font-size: 16px;">+91</span>
+                         <input type="text" id="id_phone" name="phone" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        
+                    </div>
+                    </div>
+                <div>
+                    <label for="id_location">Location :</label>
+                    {{form.location}}
+                    </div>
+                    </div>
+
+
+                <div class="form-row">
+                <div>
+                <label for="id_expertise">Expertise :</label>
+                {{form.expertise}}
+                </div>
+                <div>
+                <label for ="id_bio">Bio :</label>
+                {{form.bio}}
+                </div>
+                </div>
+
+                <div class="form-row">
+                <div>
+                <label for="id_resume">Resume :</label>
+                {{form.resume}}
+                </div>
+                <div>
+                <label for="id_type">Type :</label>
+                {{form.type}}
+                </div>
+                </div>
+
+
+
+
+
+
+
+
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <!-- Links to other pages -->
+    <div style="text-align: center; margin-top: 15px;">
+        <a href="{% url 'trainer_list' %}" style="margin-right: 10px;">Trainer List</a>
+        <a href="{% url 'home' %}">Back to Home</a>
+    </div>
+</div>
+
+
+
+</body>
+</html>
+
+

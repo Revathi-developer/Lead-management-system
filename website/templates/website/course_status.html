@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        /* General styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: black;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+            font-weight: bold;
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Status badge styling */
+        .status-joined {
+            background-color: #28a745;
+            color: white;
+            padding: 5px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .status-interested {
+            background-color: #ffc107;
+            color: white;
+            padding: 5px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .status-not-interested {
+            background-color: #dc3545;
+            color: white;
+            padding: 5px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        /* Empty message styling */
+        p {
+            font-size: 16px;
+            color: #555;
+            text-align: center;
+        }
+        .action-links a {
+            text-decoration: none;
+            font-weight: bold;
+            color: #007BFF;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+
+        .action-links a:hover {
+            color: #0056b3;
+        }
+        .action-header-links {
+             display: flex;             /* Use Flexbox for alignment */
+            justify-content: flex-end; /* Align the links to the right */
+            gap: 20px;                 /* Add space between links */
+            margin-top: 20px;          /* Optional spacing above the links */
+}
+
+    .action-header-links a {
+        text-decoration: none;
+        font-weight: bold;
+        color: #007BFF; /* Link color (blue) */
+        font-size: 1.1em;
+        cursor: pointer;
+}
+
+        /* Footer styling */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+            margin-top: auto;
+        }
+
+    </style>
+    <title>Course Status</title>
+</head>
+<body>
+    <h1>Course Status</h1>
+     <div class="action-header-links">
+    <a href="{% url 'home' %}" style="font-weight: bold;">🏠 Back to Home</a>
+    </div>
+    <div>
+        {% for course in course_status_data %}
+    {% if course.leads %}  {# Check if the course has leads #}
+        <h2>{{ course.course_name }}</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Lead Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Source</th>
+                    <th>Date Joined</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lead in course.leads %}
+                <tr>
+                    <td>{{ lead.lead_name }}</td>
+                    <td>{{ lead.email }}</td>
+                    <td>{{ lead.phone }}</td>
+                    <td>{{ lead.location }}</td>
+                    <td>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="lead_id" value="{{ lead.id }}">
+                            <select name="status" onchange="this.form.submit()">
+                                <option value="Yet to Start" {% if lead.temp_status == "Yet to Start" %}selected{% endif %}>Yet to Start</option>
+                                <option value="In Progress" {% if lead.temp_status == "In Progress" %}selected{% endif %}>In Progress</option>
+                                <option value="Completed" {% if lead.temp_status == "Completed" %}selected{% endif %}>Completed</option>
+                            </select>
+                        </form>
+                    </td>
+                    <td>{{ lead.source }}</td>
+                    <td>{{ lead.date_joined }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endfor %}
+
+    </div>
+</body>
+</html>

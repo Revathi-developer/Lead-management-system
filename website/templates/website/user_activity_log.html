@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead List</title>
+    <style>
+        /* Basic page styling */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        /* Styling the table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #32CD32;
+            color: white;
+        }
+        .action-header-links {
+            display: flex;             /* Use Flexbox for alignment */
+            justify-content: flex-end; /* Align the links to the right */
+            gap: 20px;                 /* Add space between links */
+            margin-top: 20px;          /* Optional spacing above the links */
+        }
+
+        .action-header-links a {
+            text-decoration: none;
+            font-weight: bold;
+            color: #007BFF; /* Link color (blue) */
+            font-size: 1.1em;
+            cursor: pointer;
+}
+    </style>
+</head>
+<body>
+     
+    <h1 style="text-align:center;">User Activity Log</h1>
+        <div class="action-header-links">
+        <a href="{% url 'lead_list' %}"> lead list</a>
+        <a href="{% url 'home' %}">🏠 Back to Home</a>
+        </div>
+
+        <form method="POST" action="{% url 'delete_by_date' %}">
+    {% csrf_token %}
+    <label for="delete_range">Delete activities:</label>
+    <select name="delete_range" id="delete_range">
+        <option value="today">Today</option>
+        <option value="week">Last Week</option>
+        <option value="month">Last Month</option>
+        <option value="quarter">This Quarter</option>
+    </select>
+    <button type="submit" style="background-color:  #f44336; color: white; padding: 10px 10px; border: none; border-radius:5px; cursor: pointer; font-size: 16px;">Delete</button>
+</form>
+<br>
+<br>
+<br>
+
+    <table border="1">
+        <tr>
+            <th>User</th>
+            <th>Path</th>
+            <th>Action</th>
+            <th>Timestamp</th>
+            <th>option</th>
+        </tr>
+        {% for activity in activities %}
+       
+            <tr>
+                <td>{{ activity.user }}</td>
+                <td>{{ activity.path }}</td>
+                <td>{{ activity.action }}</td>
+               
+                
+                <td>{{  activity.timestamp }}</td>
+                <td>
+        <form method="POST" action="{% url 'delete_activity' activity.id %}">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+        </form>
+    </td>
+                
+                
+               
+            </tr>
+        {% endfor %}
+    </table>
+   
+</body>
+</html>

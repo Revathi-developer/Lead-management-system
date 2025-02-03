@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Columns</title>
+</head>
+<body>
+    <h2>Map Your File Columns</h2>
+    <form method="POST" action="{% url 'process_mapping' %}">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <th>Required Field</th>
+                <th>File Column</th>
+            </tr>
+            <tr>
+                <td>Lead Name</td>
+                <td>
+                    <select name="column_mapping_lead_name" required>
+                        {% for column in file_columns %}
+                        <option value="{{ column }}">{{ column }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>
+                    <select name="column_mapping_email" required>
+                        {% for column in file_columns %}
+                        <option value="{{ column }}">{{ column }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Phone</td>
+                <td>
+                    <select name="column_mapping_phone" required>
+                        {% for column in file_columns %}
+                        <option value="{{ column }}">{{ column }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Location</td>  <!-- ✅ Added Location Field -->
+                <td>
+                    <select name="column_mapping_location" required>
+                        {% for column in file_columns %}
+                        <option value="{{ column }}">{{ column }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Source</td>
+                <td>
+                    <select name="column_mapping_source">
+                        <option value="">None</option>  <!-- ✅ Default to None if not available -->
+                        {% for column in file_columns %}
+                        <option value="{{ column }}">{{ column }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Status</td>  <!-- ✅ Added Status Field -->
+                <td>
+                    <select name="column_mapping_status">
+                        <option value="">None</option>  <!-- ✅ Default to None if not available -->
+                        {% for column in file_columns %}
+                        <option value="{{ column }}">{{ column }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Course</td>
+                <td>
+                    <select name="column_mapping_course">
+                        <option value="">None</option>  <!-- ✅ Default to None if not available -->
+                        {% for column in file_columns %}
+                        <option value="{{ column }}">{{ column }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+        </table>
+
+        <h3>Handle Duplicates:</h3>
+        <label><input type="radio" name="handle_duplicates" value="keep" checked> Keep All</label>
+        <label><input type="radio" name="handle_duplicates" value="ignore"> Ignore Existing</label>
+        <label><input type="radio" name="handle_duplicates" value="update"> Update Existing</label>
+
+        <button type="submit">Process Data</button>
+    </form>
+
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>

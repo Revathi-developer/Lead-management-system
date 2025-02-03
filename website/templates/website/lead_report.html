@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center; /* Changed align to text-align for proper centering */
+            background-color: #00B5F1;
+            padding: 20px;
+            border-radius: 8px; /* Added rounded corners */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Added shadow for depth */
+        }
+
+        h2 {
+            color: white; /* Changed header color for better contrast */
+        }
+
+        table {
+            width: 100%; /* Make the table full width */
+            border-collapse: collapse; /* Remove gaps between table cells */
+            margin-top: 20px; /* Space above the table */
+        }
+
+        th, td {
+            border: 1px solid #ccc; /* Border for cells */
+            padding: 10px; /* Padding inside cells */
+            text-align: center; /* Center text */
+        }
+
+        th {
+            background-color: #007BFF; /* Header background color */
+            color: white; /* Header text color */
+        }
+
+        td {
+            background-color: #fff; /* Cell background color */
+        }
+
+        a {
+            display: inline-block; /* Make links into buttons */
+            margin: 10px; /* Space around buttons */
+            padding: 10px 20px; /* Button padding */
+            background-color: #007BFF; /* Button background color */
+            color: white; /* Button text color */
+            text-decoration: none; /* Remove underline */
+            border-radius: 5px; /* Rounded corners for buttons */
+        }
+
+        a:hover {
+            background-color: #0056b3; /* Darker button on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Lead Report</h2>
+        <table>
+            <tr>
+                <th>Leads Joined This Week</th>
+                <th>Leads Joined Last Week</th>
+                <th>Leads Joined Last Month</th>
+            </tr>
+            <tr>
+                
+                <td><a href="{% url 'lead_list' %}?period=this_week">{{ leads_this_week }}</a></td>
+                <td><a href="{% url 'lead_list' %}?period=last_week">{{ leads_last_week }}</a></td>
+                <td><a href="{% url 'lead_list' %}?period=last_month">{{ leads_last_month }}</a></td>
+
+            </tr>
+        </table>
+        
+        <p>
+            <a href="{% url 'lead_list' %}">Back to Lead List</a>
+            <a href="{% url 'add_lead' %}">Add New Lead</a>
+        </p>
+    </div>
+</body>
+</html>

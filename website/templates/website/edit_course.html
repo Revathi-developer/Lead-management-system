@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% if course %}Edit Course{% else %}Add New Course{% endif %} - VRG Technologies</title>
+    <style>
+       /* General body styling */
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            font-family: Arial, sans-serif; /* Add a default font for a cleaner look */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0; /* Remove default body margin */
+        }
+
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 10px 0; /* Reduced padding for a more compact look */
+            font-size: 20px; /* Smaller font size for a reduced header */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        /* Main content styling */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px; /* Add rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+        }
+
+        /* Form styling */
+        .main-content h2 {
+            margin-bottom: 10px;
+            color: #4CAF50; /* Match with header color */
+        }
+        
+        .main-content form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Add spacing between form elements */
+        }
+        
+        /* Button styling */
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049; /* Slightly darker shade on hover */
+        }
+
+        /* Back link styling */
+        .main-content a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .main-content a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer styling */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 0; /* Adjust padding for consistency */
+            font-size: 14px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>{% if course %}Edit Course{% else %}Add New Course{% endif %}</h1>
+</div>
+
+<div class="main-content">
+    <h2>{% if course %}Editing: {{ course.course_name }}{% else %}Add a New Course{% endif %}</h2>
+    
+    <!-- Form to Add or Edit a Course -->
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">{% if course %}Update Course{% else %}Add Course{% endif %}</button>
+    </form>
+    
+    <br><br>
+    <a href="{% url 'course_list' %}">Back to Course List</a>
+</div>
+
+<footer>
+    <p>© 2024 VRG Technologies. All rights reserved.</p>
+</footer>
+</body>
+</html>
+
+
+

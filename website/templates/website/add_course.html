@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Course</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 4px solid;
+            border-image: linear-gradient(90deg, #00C6A1, #00B5F1) 1;
+            overflow: hidden;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            text-align: center;
+            background: linear-gradient(90deg, #00C6A1, #00B5F1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            background: linear-gradient(90deg, #00C6A1, #00B5F1);
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #00B5F1, #00C6A1);
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #00B5F1;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .messages {
+            color: red;
+            margin-bottom: 15px;
+            list-style-type: none;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Add New Course</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label for="course_name">Course Name:</label>
+            <input type="text" id="course_name" name="course_name" required>
+            <button type="submit">Add Course</button>
+        </form>
+        <a href="{% url 'course_list' %}">Back to Course List</a>
+    </div>
+</body>
+</html>
+

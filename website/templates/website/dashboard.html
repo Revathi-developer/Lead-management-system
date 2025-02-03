@@ -1,0 +1,424 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* General styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            width: 100vw;
+            overflow-x: hidden;
+        }
+        
+        .dashboard {
+            padding: 20px;
+            max-width: 100%;
+            margin: 0 auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        /* Stats Section (Arrange items in a horizontal line) */
+        .stats {
+            display: flex; 
+            justify-content: space-evenly;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .stats h3 {
+            text-align: center;
+            font-size: 1.2rem;
+            background: #e9ecef;
+            color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 0;
+            flex: 1;
+        }
+
+        .stats h3:nth-child(1) {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .stats h3:nth-child(2) {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .stats h3:nth-child(3) {
+            background-color: #ffc107;
+            color: white;
+        }
+
+        /* Chart and Controls container */
+        .chart-controls-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+            width: 90%;
+        }
+
+        .chart {
+            flex: 3;
+            margin-top: 20px;
+            margin-right: 10px;
+            width: 90%;
+        }
+
+        canvas {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none; 
+        }
+
+        canvas.active {
+            display: block; 
+        }
+
+        .controls {
+            flex: 1;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-left: 50px;
+            margin-right: 50px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .controls label {
+            font-size: 1rem;
+            margin-right: 10px;
+            color: #333;
+        }
+
+        .controls select,
+        .controls input {
+            padding: 8px 12px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            width: 100%;
+        }
+
+        .controls .dateRangeForm,
+        .controls .lead-status {
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .back-button {
+            display: block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            .chart-controls-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .chart {
+                margin-bottom: 20px;
+            }
+
+            .controls {
+                width: 100%;
+                margin-left: 0;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="dashboard">
+        <div class="dashboard-content">
+            <div id="stats" class="stats">
+                <h3>Total Leads: {{ total_leads }}</h3>
+                <h3>Total Enrollments: {{ total_enrollments }}</h3>
+                <h3>Conversion Rate: {{ conversion_rate }}%</h3>
+            </div>
+
+            <div class="chart-controls-container">
+                <div class="chart">
+                    <canvas id="leadChart" class="active"></canvas>
+                    <canvas id="leadSourceChart" chart="chart-canvas"></canvas>
+                    <canvas id="leadCourseChart" chart="chart-canvas"></canvas>
+                </div>
+
+                <div class="controls">
+                    <div class="dateRangeForm">
+                        <label for="dateRange">Select Date Range:</label>
+                        <select id="dateRange" name="dateRange" onchange="handleDateRangeChange()">
+                            <option value="this_week">This Week</option>
+                            <option value="this_month">This Month</option>
+                            <option value="last_week">Last Week</option>
+                            <option value="last_month">Last Month</option>
+                            <option value="this_quarter">This Quarter</option>
+                            <option value="previous_quarter">Previous Quarter</option>
+                            <option value="this_year">This Year</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                        <div id="customDateRange" style="display: none;">
+                            <label for="fromDate">From:</label>
+                            <input type="date" id="fromDate" name="fromDate">
+                            <label for="toDate">To:</label>
+                            <input type="date" id="toDate" name="toDate">
+                            <button type="button" onclick="applyCustomDateRange()">Apply</button>
+                        </div>
+                    </div>
+
+                    <div class="lead-status">
+                        <label for="status">Lead Status:</label>
+                        <select id="status" name="lead_status" onchange="handleChartSelection()">
+                            <option value="conversion">Leads - Conversion</option>
+                            <option value="sources">Leads - Sources</option>
+                            <option value="courses">Leads - Courses</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <a href="{% url 'home' %}" class="back-button">Back to Home</a>
+    </div>
+
+   <script>
+        let leadSourceChart, leadCourseChart, conversionChart;
+
+        function checkCustomDateInput() {
+            const fromDate = document.getElementById('fromDate').value;
+            const toDate = document.getElementById('toDate').value;
+            document.querySelector('button[type="button"]').disabled = !(fromDate && toDate);
+        }
+
+        // Call checkCustomDateInput() on change of inputs
+        document.getElementById('fromDate').addEventListener('input', checkCustomDateInput);
+        document.getElementById('toDate').addEventListener('input', checkCustomDateInput);
+
+        // Fetch data for charts
+        async function fetchChartData(dateRange = 'this_week', fromDate = '', toDate = '') {
+            try {
+                let url = `/get-chart-data/?dateRange=${dateRange}`;
+                if (fromDate && toDate) {
+                    url += `&from_date=${fromDate}&to_date=${toDate}`;
+                }
+
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Failed to fetch data.');
+
+                const data = await response.json();
+                console.log("Chart Data:", data);
+
+                if (data && data.sources && data.courses) {
+                    initializeCharts(data);
+                } else {
+                    console.error('Invalid data format:', data);
+                    alert('Received invalid data format.');
+                }
+            } catch (error) {
+                console.error('Error fetching chart data:', error);
+                alert('Failed to load chart data. Please try again.');
+            }
+        }
+
+        // Initialize all charts
+        function initializeCharts(data) {
+            // Conversion Chart (Bar chart)
+            const ctxConversion = document.getElementById('leadChart').getContext('2d');
+            if (conversionChart) {
+                conversionChart.destroy();
+            }
+            conversionChart = new Chart(ctxConversion, {
+                type: 'bar',
+                data: {
+                    labels: data.conversion.labels,
+                    datasets: [{
+                        label: 'Lead Conversion',
+                        data: data.conversion.data,
+                        backgroundColor: '#007bff',
+                        borderColor: '#0056b3',
+                        borderWidth: 1
+                    }]
+                }
+            });
+
+            // Lead Source Chart (Pie chart)
+            const ctxSource = document.getElementById('leadSourceChart').getContext('2d');
+            if (leadSourceChart) {
+                leadSourceChart.destroy();
+            }
+            leadSourceChart = new Chart(ctxSource, {
+                type: 'pie',
+                data: {
+                    labels: data.sources.labels,
+                    datasets: [{
+                        label: 'Lead Sources',
+                        data: data.sources.data,
+                        backgroundColor: ['#007bff', '#ffc107', '#28a745', '#dc3545'],
+                        borderColor: '#fff',
+                        borderWidth: 1
+                    }]
+                }
+            });
+
+            // Lead Course Chart (Pie chart)
+            const ctxCourse = document.getElementById('leadCourseChart').getContext('2d');
+            if (leadCourseChart) {
+                leadCourseChart.destroy();
+            }
+            leadCourseChart = new Chart(ctxCourse, {
+                type: 'pie',
+                data: {
+                    labels: data.courses.labels,
+                    datasets: [{
+                        label: 'Lead Courses',
+                        data: data.courses.data,
+                        backgroundColor: ['#28a745', '#ffc107', '#007bff'],
+                        borderColor: '#fff',
+                        borderWidth: 1
+                    }]
+                }
+            });
+        }
+
+        // Handle date range change
+        function handleDateRangeChange() {
+            const selectedRange = document.getElementById('dateRange').value;
+            fetchChartData(selectedRange);
+
+            const customDateRange = document.getElementById('customDateRange');
+            if (selectedRange === 'custom') {
+                customDateRange.style.display = 'block';
+            } else {
+                customDateRange.style.display = 'none';
+            }
+        }
+
+        // Apply custom date range
+        function applyCustomDateRange() {
+            const fromDate = document.getElementById('fromDate').value;
+            const toDate = document.getElementById('toDate').value;
+
+            if (fromDate && toDate) {
+                fetchChartData('custom', fromDate, toDate);
+            }
+        }
+
+        // Handle chart selection
+        function handleChartSelection() {
+            const selectedStatus = document.getElementById('status').value;
+            hideAllCharts();
+
+            if (selectedStatus === 'conversion') {
+                document.getElementById('leadChart').style.display = 'block';
+                document.getElementById('leadSourceChart').style.display = 'none';
+                document.getElementById('leadCourseChart').style.display = 'none';
+            } else if (selectedStatus === 'sources') {
+                document.getElementById('leadChart').style.display = 'none';
+                document.getElementById('leadSourceChart').style.display = 'block';
+                document.getElementById('leadCourseChart').style.display = 'none';
+            } else if (selectedStatus === 'courses') {
+                document.getElementById('leadChart').style.display = 'none';
+                document.getElementById('leadSourceChart').style.display = 'none';
+                document.getElementById('leadCourseChart').style.display = 'block';
+            }
+        }
+
+        // Hide all charts
+        function hideAllCharts() {
+            document.getElementById('leadChart').style.display = 'none';
+            document.getElementById('leadSourceChart').style.display = 'none';
+            document.getElementById('leadCourseChart').style.display = 'none';
+        }
+
+        // Initial fetch for data when the page loads
+        window.onload = () => {
+            fetchChartData();  // Initial data fetch when the page loads
+            handleChartSelection();  // Set initial chart visibility (conversion by default)
+        };
+
+        function validateAndProcessData(data, fromDate, toDate) {
+    // Check for error in data
+            if (data.error) {
+                alert(data.error);
+                return; // Exit the function if there's an error
+            }
+
+    // Validate date range
+            if (new Date(fromDate) > new Date(toDate)) {
+                alert('From date cannot be later than To date.');
+                return; // Exit the function if the date range is invalid
+            }
+
+    // Proceed with chart initialization if no errors
+            initializeCharts(data);
+        }
+
+        
+
+        function updateChart(conversion, sources, courses) {
+            // Update your charts with the received data
+            if (conversion.data.length === 0) {
+                console.log("No conversion data to display.");
+            } else {
+                // Update conversion chart, for example:
+                // renderChart('conversion-chart', conversion.data);
+            }
+
+            if (sources.data.length === 0) {
+                console.log("No source data to display.");
+            } else {
+                // Update source chart, for example:
+                // renderChart('source-chart', sources.data);
+            }
+
+            if (courses.data.length === 0) {
+                console.log("No course data to display.");
+            } else {
+                // Update course chart, for example:
+                // renderChart('course-chart', courses.data);
+            }
+        }
+
+        // Function to render the chart (Example)
+        function renderChart(chartId, chartData) {
+            // You can use a charting library like Chart.js to render the data here
+            // Example: new Chart(document.getElementById(chartId), { ... });
+        }
+    </script>
+</body>
+</html>
+        

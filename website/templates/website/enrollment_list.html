@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enrollment List</title>
+    <style>
+        /* Basic page styling */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        main {
+            flex: 1;
+        }
+        a:link, /* Unvisited links */
+        a:visited, /* Visited links */
+        a:hover, /* Links when hovered */
+        a:active { /* Links when clicked */
+            color: #007BFF; /* Choose a single color, e.g., blue */
+            text-decoration: none; /* Optional: Removes the underline */
+        }
+
+        /* Styling the table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color:#228B22;
+            color: white;
+        }
+
+        .action-header-links {
+            display: flex;             /* Use Flexbox for alignment */
+            justify-content: flex-end; /* Align the links to the right */
+            gap: 20px;                 /* Add space between links */
+            margin-top: 20px;          /* Optional spacing above the links */
+}
+
+        .action-header-links a {
+            text-decoration: none;
+            font-weight: bold;
+            color: #007BFF; /* Link color (blue) */
+            font-size: 1.1em;
+            cursor: pointer;
+}
+
+        /* Footer styling */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+            margin-top: auto;
+        }
+
+        .alert {
+            color: green;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1 align=center>Enrollment List</h1>
+    <div class="action-header-links">
+        <a href="{% url 'add_enrollment' %}" style="font-weight: bold;">➕ Add New Enrollment</a>
+        <span>&nbsp;&nbsp;&nbsp;</span>
+        <a href="{% url 'home' %}" style="font-weight: bold;">🏠 Back to Home</a>
+        <a href="{% url 'archived_enrollments' %}">Archive list</a>
+    </div>
+
+    <!-- Display success or error messages -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Table to display enrollment data -->
+    <table border="1">
+        <tr>
+            <th>Enrollment Number</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Courses Opted</th>
+            <th>Mode of Training</th>
+            <th>Tentative Date of Joining</th>
+            <th>Actions</th>
+        </tr>
+        
+        <!-- Loop through each enrollment in the 'enrollments' context variable -->
+        {% for enrollment in enrollments %}
+        <tr>
+            <td>{{ enrollment.enrollment_number }}</td>
+            <td>{{ enrollment.name }}</td>
+            <td>{{ enrollment.email }}</td>
+            <td>{{ enrollment.phone }}</td>
+            <td>{{ enrollment.address }}</td>
+            <td>
+                {% if enrollment.courses_opted.all %}
+                    {% for course in enrollment.courses_opted.all %}
+                        {{ course.course_name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                {% else %}
+                    No courses selected
+                {% endif %}
+            </td>
+            <td>{{ enrollment.mode_of_training }}</td>
+            <td>{{ enrollment.tentative_date_of_joining_course }}</td>
+
+            <!-- Actions column -->
+            <td class="action-links">
+                <a href="{% url 'edit_enrollment' enrollment.id %}">Edit</a> |
+                <a href="{% url 'delete_enrollment' enrollment.id %}" class="btn btn-danger">Delete</a> |
+                {% if enrollment.id %}
+                    <a href="{% url 'archive_enrollment' enrollment.id %}">Archive</a>
+                {% else %}
+                    <span>No ID</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <br><br>
+    
+    <footer>
+        <p>© 2024 VRG Technologies. All rights reserved.</p>
+    </footer>
+</body>
+</html>

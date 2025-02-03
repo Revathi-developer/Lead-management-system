@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Trainer - VRG Technologies</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h2 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin-bottom: 30px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            color: white;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            width: 45%;
+            text-align: center;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .cancel {
+            background-color: #f44336;
+        }
+
+        .cancel:hover {
+            background-color: #d32f2f;
+        }
+
+        form button {
+            width: 100%; /* Make the submit button span the full width */
+        }
+
+        /* Ensure "Cancel" button appears below the form */
+        .cancel-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Confirm Deletion</h2>
+        <p>Are you sure you want to delete the trainer "{{ trainer.name }}"?</p>
+        
+        <!-- Form for Deletion -->
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="button">Yes, Delete</button>
+            <a href="{% url 'trainer_list' %}" class="button cancel">Cancel</a>
+        </form>
+    </div>
+
+    <!-- "Cancel" Button outside the form -->
+    
+</body>
+</html>
+
+

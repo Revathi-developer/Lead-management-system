@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid;
+            border-image: linear-gradient(90deg, #00C6A1, #00B5F1) 1;
+            overflow: hidden;
+        }
+
+        h2 {
+            text-align: center;
+            background: linear-gradient(90deg, #00C6A1, #00B5F1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin: 5px 0 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            margin-bottom: 15px;
+        }
+
+        .form-row div {
+            flex: 1;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            background: linear-gradient(90deg, #00C6A1, #00B5F1);
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background: linear-gradient(90deg, #00B5F1, #00C6A1);
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #00B5F1;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .messages {
+            color: red;
+            margin-bottom: 15px;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .error-messages {
+            color: #e74c3c;
+            margin-bottom: 15px;
+            padding: 0;
+            list-style-type: none;
+        }
+    </style>
+    <title>Add Lead</title>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Add New Lead</h2>
+
+        <!-- Table for Aligning Buttons -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="width: 50%; text-align: right;">
+                        <!-- Export Leads Button -->
+                        <a href="{% url 'export_leads' %}" class="btn btn-success">Export Leads</a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <!-- Import Button -->
+                         <button class="btn btn-primary" onclick="triggerFileInput()">Import Leads</button>
+                    </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Hidden File Input for Import -->
+        <form method="POST" enctype="multipart/form-data" action="{% url 'import_leads' %}" id="importForm">
+    {% csrf_token %}
+    <input type="file" name="leads_file" id="leads_file" class="form-control" accept=".csv, .xls, .xlsx" style="display: none;" required onchange="submitForm()">
+</form>
+
+
+
+
+
+
+
+
+        <!-- Lead Form -->
+        <form action="{% url 'add_lead' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="form-row">
+                <div>
+                    <label for="id_lead_name">Lead Name:</label>
+                    {{ form.lead_name }}
+                </div>
+                <div>
+                    <label for="id_email">Email:</label>
+                    {{ form.email }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label for="id_phone">Phone (+91):</label>
+                    <div style="display: flex; align-items: center;">
+                        <span style="margin-right: 10px; font-size: 16px;">+91</span>
+                        <input type="text" id="id_phone" name="phone" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    </div>
+                </div>
+                <div>
+                    <label for="id_location">Location:</label>
+                    {{ form.location }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label for="id_status">Status:</label>
+                    {{ form.status }}
+                </div>
+                <div>
+                    <label for="id_source">Source:</label>
+                    {{ form.source }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label for="id_course">Course:</label>
+                    {{ form.course }}
+                </div>
+            </div>
+
+            <input type="submit" value="Submit">
+        </form>
+
+        <!-- Links -->
+        <a href="{% url 'lead_list' %}">Lead List</a>
+        <a href="{% url 'home' %}">Back to Home</a>
+    </div>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="error-messages" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if form.errors %}
+    <ul class="error-messages">
+        {% for field in form %}
+            {% for error in field.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+<script>
+    function triggerFileInput() {
+        // Simulate a click on the file input field
+        document.getElementById('leads_file').click();
+    }
+
+    function submitForm() {
+        // Submit the form after the file is selected
+        document.getElementById('importForm').submit();
+    }
+</script>
+</body>
+</html>

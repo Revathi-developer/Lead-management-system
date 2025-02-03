@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead List</title>
+    <style>
+        /* Basic page styling */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        a:link, /* Unvisited links */
+        a:visited, /* Visited links */
+        a:hover, /* Links when hovered */
+        a:active { /* Links when clicked */
+            color: #007BFF; /* Choose a single color, e.g., blue */
+            text-decoration: none; /* Optional: Removes the underline */
+}
+
+        main {
+            flex: 1;
+        }
+
+        /* Styling the table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #EB5406;
+            color: white;
+        }
+
+        /* Styling for action links */
+        .action-links a {
+            text-decoration: none;
+            font-weight: bold;
+            color: #007BFF;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+
+        .action-links a:hover {
+            color: #0056b3;
+        }
+        .action-header-links {
+             display: flex;             /* Use Flexbox for alignment */
+            justify-content: flex-end; /* Align the links to the right */
+            gap: 20px;                 /* Add space between links */
+            margin-top: 20px;          /* Optional spacing above the links */
+}
+
+    .action-header-links a {
+        text-decoration: none;
+        font-weight: bold;
+        color: #007BFF; /* Link color (blue) */
+        font-size: 1.1em;
+        cursor: pointer;
+}
+
+        /* Footer styling */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+            margin-top: auto;
+        }
+
+        .alert {
+            color: green;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style= "text-align:center;">Lead List</h1>
+    <div class="action-header-links">
+        <a href="{% url 'add_lead' %}" style="font-weight: bold;">➕ Add New Lead</a>
+        <span>&nbsp;&nbsp;&nbsp;</span>
+        <a href="{% url 'home' %}" style="font-weight: bold;">🏠 Back to Home</a>
+    </div>
+
+    <!-- Display success or error messages -->
+    {% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+
+
+    <!-- Table to display lead data -->
+    <table border="1">
+        <tr>
+            <th>Lead Number</th>
+            <th>Date Joined</th>
+            <th>Lead Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Source</th>
+            <th>Course</th>
+            
+           
+            <th>Actions</th>  <!-- Actions column -->
+        </tr>
+        
+        <!-- Loop through each lead in the 'leads' context variable -->
+        {% for lead in leads %}
+        <tr>
+            <td>{{ lead.lead_number }}</td>
+            <td>{{ lead.created_at|date:"Y-m-d" }}</td>
+            <td>{{ lead.lead_name }}</td>
+            <td>{{ lead.email }}</td>
+            <td>{{ lead.phone }}</td>
+            <td>{{ lead.location }}</td>
+            <td>{{ lead.status }}</td>
+            <td>{{ lead.source }}</td>
+            <td>{{ lead.course.course_name }}</td>
+            
+            
+           
+            
+            <!-- Action Links (inside the same td as actions column) -->
+            <td class="action-links">
+        <a href="{% url 'edit_lead' lead.id %}" >Edit</a> |
+        <a href="{% url 'delete_lead' lead.id %}" class="btn btn-danger">Delete</a>
+    </td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <br><br>
+    
+    <!-- Action buttons below the table -->
+    
+    
+    <footer>
+        <p>© 2024 VRG Technologies. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
+

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Trainer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .form-container button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .form-container button:hover {
+            background-color: #218838;
+        }
+
+        .form-container a {
+            display: inline-block;
+            margin-top: 10px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 14px;
+            text-align: center;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .form-container a:hover {
+            text-decoration: underline;
+        }
+
+        /* Success message styles */
+        .alert-success {
+            color: green;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Edit Profile</h2>
+
+    <!-- Display success or error messages -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert-success">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Form for editing profile -->
+    <div class="form-container">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ form.name.value }}" required><br><br>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ form.email.value }}" required><br><br>
+            
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" name="phone" value="{{ form.phone.value }}" required><br><br>
+            
+            <label for="bio">Bio:</label>
+            <textarea id="bio" name="bio" required>{{ form.bio.value }}</textarea><br><br>
+            
+            <label for="expertise">Expertise:</label>
+            <input type="text" id="expertise" name="expertise" value="{{ form.expertise.value }}" required><br><br>
+            
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" value="{{ form.location.value }}" required><br><br>
+            
+            <!-- Resume Section -->
+            <label for="resume">Resume:</label><br>
+{% if form.resume.value %}
+    <p>Currently: <a href="{{ form.resume.value.url }}" target="_blank">{{ form.resume.value.name }}</a></p>
+    <button type="button" onclick="clearResume()">Clear</button><br><br>
+{% else %}
+    <p>No resume uploaded.</p>
+{% endif %}
+
+<input type="file" name="resume" id="resume" accept=".pdf,.docx,.doc" /><br><br>
+
+<label for="type">Type:</label>
+<input type="text" id="type" name="type" value="{{ form.type.value }}" required><br><br>
+
+            <button type="submit">Save Changes</button>
+        </form>
+
+        <a href="{% url 'trainer_list' %}">Cancel</a>
+    </div>
+
+    <script>
+       function clearResume() {
+    // Clear the file input field
+    document.getElementById('resume').value = '';
+    
+    // Update the displayed text when the file input is cleared
+    const resumeText = document.querySelector('p');
+    resumeText.innerHTML = 'No resume uploaded.';
+}
+    </script>
+
+   
+</body>
+</html>
+

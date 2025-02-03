@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+       body {
+           font-family: Arial, sans-serif;
+           margin: 0;
+           padding: 0;
+           display: flex;
+           flex-direction: column;
+           min-height: 100vh; /* Ensures footer stays at the bottom */
+       }
+
+       .header {
+           display: flex;
+           justify-content: center; /* Centers the title */
+           align-items: center; /* Vertically centers items */
+           margin: 20px;
+           position: relative; /* Allows for absolute positioning of the link */
+       }
+
+       h1 {
+           margin: 0;
+           padding: 0;
+           font-size: 2em;
+       }
+
+       /* Link styling */
+       .back-link {
+           text-decoration: none;
+           color: #007BFF; /* Link color */
+           font-size: 1em;
+           font-weight: bold;
+           cursor: pointer; /* Changes cursor to hand */
+           position: absolute; /* Positions the link to the right */
+           right: 0;
+       }
+
+       .back-link:hover {
+           text-decoration: underline; /* Underline when hovered */
+       }
+
+       .hand-emoji {
+           font-size: 1.5em; /* Adjusts the size of the hand emoji */
+           margin-left: 5px;
+       }
+
+       table {
+           width: 80%; /* Adjust width as needed */
+           margin: 20px auto;
+           border-collapse: collapse;
+       }
+
+       table, th, td {
+           border: 1px solid black;
+       }
+
+       th, td {
+           padding: 8px;
+           text-align: left;
+       }
+
+       th {
+           background-color:purple ;
+           color: white;
+       }
+
+       /* Footer styling */
+       footer {
+           background-color: #333;
+           color: white;
+           text-align: center;
+           padding: 15px 0;
+           font-size: 14px;
+           margin-top: auto; /* Pushes the footer to the bottom */
+       }
+    </style>
+    <title>Lead Sources</title>
+</head>
+<body>
+
+<div class="header">
+    <h1>Lead Sources</h1>
+    <a class="back-link" href="{% url 'home' %}">Back to Home <span class="hand-emoji">👈</span></a>
+</div>
+
+<div class="main-content">
+    <table>
+        <thead>
+            <tr>
+                <th>Lead Name</th>
+                <th>Source</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lead in leads %}
+            <tr>
+                <td>{{ lead.lead_name }}</td>
+                <td>{{ lead.get_source_display }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<footer>
+    <p>© 2024 VRG Technologies. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

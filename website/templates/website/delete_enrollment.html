@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Enrollment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            color: #d9534f;
+        }
+        p {
+            font-size: 16px;
+            color: #555;
+        }
+        form {
+            margin-top: 20px;
+        }
+        button {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #c9302c;
+        }
+        a {
+            text-decoration: none;
+            color: #0275d8;
+            margin-left: 10px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Delete Enrollment</h1>
+        <p>Are you sure you want to delete the lead: <strong>{{ enrollment.name }}</strong>?</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit">Yes, delete</button>
+            <a href="{% url 'enrollment_list' %}">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>
