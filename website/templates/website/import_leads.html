@@ -4,6 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Import Leads</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 50px;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        h2 {
+            color: #333;
+        }
+        input[type="file"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        li {
+            background: #ffdddd;
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 5px solid #f44336;
+        }
+    </style>
 </head>
 <body>
     <h2>Upload Leads File</h2>
@@ -11,6 +58,7 @@
         {% csrf_token %}
         <p>Select a file to upload (CSV, XLS, or XLSX):</p>
         <input type="file" name="leads_file" required>
+        <br>
         <button type="submit">Upload</button>
     </form>
 
@@ -23,6 +71,10 @@
     {% endif %}
 </body>
 </html>
+
+
+
+
 
 
 
